@@ -3,13 +3,17 @@ import boto3
 import uuid
 import dotenv
 import os
+from dotenv import load_dotenv
 
+# .env dosyasındaki verileri yükle
+# Dosya adın 'key.env' olduğu için bunu belirtmeliyiz
+load_dotenv("key.env") 
 
+# Değişkenleri dosyadan çek
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 
-AWS_ACCESS_KEY_ID = "AKIA6KDQTPW7FDK4YIHS"
-AWS_SECRET_ACCESS_KEY = "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"
-AWS_DEFAULT_REGION = ("AWS_DEFAULT_REGION")
-
+# 3. Flask uygulamasını BURADA tanımla (Hata buradaydı)
 app = Flask(__name__)
 app.secret_key = 'gizli-anahtar'
 
