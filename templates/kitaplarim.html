@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kitaplarım</title>
+  <link rel="stylesheet" href="style.css" /> <!-- Eğer stil dosyası dışarıdaysa -->
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f1117;
+      color: #e3e3e3;
+      margin: 0;
+      padding: 0;
+    }
+    .yeni-header {
+      background-color: #1c1f26;
+      padding: 16px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+    }
+    .logo-alani {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      width: 32px;
+      height: 32px;
+    }
+    .logo-yazi {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .menu-alani {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .menu-alani a {
+      background-color: #2c2f36;
+      color: white;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 16px;
+      font-weight: bold;
+    }
+    .profile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    .icerik {
+      padding: 40px;
+    }
+    .kitaplar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.kitap-kart {
+  background-color: #1f232d;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.kitap-kart:hover {
+  transform: scale(1.02);
+}
+
+.kitap-kart img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain; /* artık kırpmaz */
+  background-color: #2c2f36;
+  border-radius: 8px;
+  padding: 6px;
+}
+
+.kitap-kart .durum-etiket {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: #0cce6b;
+  color: white;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.kitap-kart .durum-etiket.degil {
+  background-color: #f44336;
+}
+
+.kitap-kart h4 {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.kitap-kart p {
+  font-size: 13px;
+  color: #cccccc;
+  text-align: center;
+  margin: 4px 0;
+}
+
+  </style>
+</head>
+<body>
+
+<header class="yeni-header">
+  <div class="logo-alani">
+    <img src="https://cdn-icons-png.flaticon.com/512/29/29302.png" alt="Logo" class="logo">
+    <span class="logo-yazi">Kitabım Burada</span>
+  </div>
+  <div class="menu-alani">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="kitaplarim.html">Kitaplarım</a>
+    <a href="giris.html"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" class="profile-icon" /></a>
+  </div>
+</header>
+
+<div class="icerik">
+  <h2>Kiralanan Kitaplarım</h2>
+  <div class="kitaplar-grid" id="kitaplar-listesi">
+    <!-- JavaScript buraya kitap kartlarını ekleyecek -->
+  </div>
+</div>
+
+<script>
+fetch("/api/kullanicinin-kitaplari", {
+  method: "GET",
+  credentials: "include"
+})
+.then(res => res.json())
+.then(kitaplar => {
+  const div = document.getElementById("kitaplar-listesi");
+
+  if (!kitaplar.length || kitaplar.error) {
+    div.innerHTML = "<p>Henüz hiçbir kitap kiralanmadı.</p>";
+    return;
+  }
+
+  kitaplar.forEach((kitap) => {
+    const gorselSrc = kitap.gorsel_url || "/static/images/placeholder.png";
+    const kart = document.createElement("div");
+    kart.className = "kitap-kart";
+
+    kart.innerHTML = `
+      <div style="position: relative;">
+        <span class="durum-etiket ${kitap.durum.toLowerCase() !== 'mevcut' ? 'degil' : ''}">
+          ${kitap.durum}
+        </span>
+        <img src="${gorselSrc}" alt="${kitap.isim}" class="kitap-detay" data-id="${kitap.kitap_id}" />
+      </div>
+      <h4 class="kitap-detay" data-id="${kitap.kitap_id}">${kitap.isim}</h4>
+      <p>${kitap.yazar || "Bilinmeyen yazar"}</p>
+      <button class="iptal-btn" data-id="${kitap.kitap_id}">İptal Et</button>
+    `;
+
+    div.appendChild(kart);
+  });
+})
+.catch(err => {
+  document.getElementById("kitaplar-listesi").innerHTML = "<p>Hata oluştu.</p>";
+});
+
+// 👉 Tıklama işlemleri
+document.addEventListener("click", function (e) {
+  // İptal Et butonuna tıklanırsa
+  if (e.target.classList.contains("iptal-btn")) {
+    e.stopPropagation(); // detay linkini engelle
+    const kitapId = e.target.getAttribute("data-id");
+
+    fetch("/api/kirala-iptal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kitap_id: kitapId })
+    })
+    .then(res => res.json())
+    .then(cevap => {
+      if (cevap.durum === "iptal edildi") {
+        window.location.reload();
+      } else {
+        alert(cevap.error || "Kitap iptal edilemedi.");
+      }
+    })
+    .catch(() => alert("Bir hata oluştu."));
+  }
+
+  // Kitap detayına tıklanırsa
+  if (e.target.classList.contains("kitap-detay")) {
+    const id = e.target.getAttribute("data-id");
+    window.location.href = `kitap.html?id=${id}`;
+  }
+});
+  </script>
+
+</body>
+</html>

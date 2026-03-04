@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Giriş Sayfası</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      height: 100vh;
+      background: url('{{ url_for('static', filename='images/kitap-arka.png') }}') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    /* Gölge katmanı */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 0;
+    }
+
+    .hosgeldiniz-alani {
+      text-align: center;
+      margin-bottom: 20px;
+      background: rgba(255,255,255,0.1);
+      padding: 10px 25px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+      z-index: 1;
+    }
+
+    .hosgeldiniz-baslik {
+      font-size: 36px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .hosgeldiniz-animasyon {
+      font-family: 'Great Vibes', cursive;
+      font-size: 36px;
+      color: #ffffff;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      margin: 0 auto;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .giris-kutu {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      width: 320px;
+      text-align: center;
+      backdrop-filter: blur(6px);
+      z-index: 1;
+    }
+
+    .giris-kutu.genis {
+      width: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .giris-kutu h2 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #0056d2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #003e9f;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 90%;
+      margin-bottom: 10px;
+    }
+
+    .giris-formu {
+      margin-top: 20px;
+    }
+
+    .kayit-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .form-grup {
+      flex: 1 1 calc(50% - 15px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-grup.full {
+      flex: 1 1 100%;
+    }
+
+    label {
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #333;
+      text-align: left;
+    }
+
+    small {
+      display: block;
+      margin-top: 10px;
+    }
+
+    a {
+      color: #0056d2;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hosgeldiniz-alani">
+    <div class="hosgeldiniz-baslik">Kitabım Burada’ya</div>
+    <div class="hosgeldiniz-animasyon">Hoş Geldiniz</div>
+  </div>
+
+  <div class="giris-kutu" id="girisPaneli">
+    <h2 id="panelBaslik">Giriş Yap</h2>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <button style="flex: 1;" onclick="girisTipiniAyarla('kullanici')">Kullanıcı Girişi</button>
+      <button style="flex: 1;" onclick="girisTipiniAyarla('admin')">Admin Girişi</button>
+    </div>
+
+    <div id="giris-formu" class="giris-formu">
+      <input type="email" placeholder="E-posta" />
+      <input type="password" placeholder="Şifre" />
+      <button>Giriş Yap</button>
+      <small>Hesabınız yok mu? <a onclick="kayitModunaGec()">Kaydol</a></small>
+    </div>
+
+    <div id="kayit-formu" class="giris-formu" style="display: none;">
+      <div class="kayit-grid">
+        <div class="form-grup">
+          <label>Ad Soyad</label>
+          <input type="text" placeholder="Adınız Soyadınız" />
+        </div>
+        <div class="form-grup">
+          <label>E-posta</label>
+          <input type="email" placeholder="ornek@mail.com" />
+        </div>
+        <div class="form-grup">
+          <label>Şifre</label>
+          <input type="password" placeholder="Şifre" />
+        </div>
+        <div class="form-grup">
+          <label>Şifre Tekrar</label>
+          <input type="password" placeholder="Şifre tekrar" />
+        </div>
+        <div id="admin-ekstra" class="form-grup full" style="display: none;">
+          <label>Admin Anahtarı</label>
+          <input type="text" placeholder="Gizli anahtar" />
+        </div>
+        <div id="admin-unvan" class="form-grup full" style="display: none;">
+          <label>Pozisyon</label>
+          <input type="text" placeholder="Kütüphane Yöneticisi vb." />
+        </div>
+      </div>
+      <button style="margin-top: 15px;">Kaydol</button>
+      <small>Zaten hesabınız var mı? <a onclick="geriDon()">Giriş yap</a></small>
+    </div>
+  </div>
+
+  <script>
+    let aktifTip = "kullanici";
+
+    function girisTipiniAyarla(tip) {
+      aktifTip = tip;
+      document.getElementById("panelBaslik").innerText = tip === "admin" ? "Admin Girişi" : "Kullanıcı Girişi";
+      document.getElementById("giris-formu").style.display = "block";
+      document.getElementById("kayit-formu").style.display = "none";
+      document.getElementById("girisPaneli").classList.remove("genis");
+    }
+
+    function kayitModunaGec() {
+      document.getElementById("giris-formu").style.display = "none";
+      document.getElementById("kayit-formu").style.display = "block";
+      document.getElementById("panelBaslik").innerText = aktifTip === "admin" ? "Admin Kaydı" : "Kullanıcı Kaydı";
+
+      document.getElementById("admin-ekstra").style.display = aktifTip === "admin" ? "block" : "none";
+      document.getElementById("admin-unvan").style.display = aktifTip === "admin" ? "block" : "none";
+
+      document.getElementById("girisPaneli").classList.add("genis");
+    }
+
+    function geriDon() {
+      document.getElementById("giris-formu").style.display = "block";
+      document.getElementById("kayit-formu").style.display = "none";
+      document.getElementById("panelBaslik").innerText = aktifTip === "admin" ? "Admin Girişi" : "Kullanıcı Girişi";
+      document.getElementById("girisPaneli").classList.remove("genis");
+    }
+    document.querySelector("#giris-formu button").addEventListener("click", async () => {
+      const email = document.querySelector("#giris-formu input[type='email']").value;
+      const sifre = document.querySelector("#giris-formu input[type='password']").value;
+
+      const response = await fetch("/api/giris", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, sifre, tip: aktifTip })
+      });
+
+      const sonuc = await response.json();
+      if (response.ok) {
+        window.location.href = "/index.html";
+      } else {
+        alert(sonuc.hata || "Giriş başarısız");
+      }
+    });
+
+    document.querySelector("#girisBtn").addEventListener("click", async () => {
+    const inputlar = document.querySelectorAll("#giris-formu input");
+    const email = inputlar[0].value;
+    const sifre = inputlar[1].value;
+
+    const response = await fetch("/api/giris", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, sifre, tip: aktifTip }),
+      credentials: "include" // <-- Bu çok önemli
+    });
+
+    const sonuc = await response.json();
+    if (response.ok) {
+      window.location.href = "/index.html";  // veya kitaplarim.html
+    } else {
+      alert(sonuc.hata || "Giriş başarısız");
+    }
+  });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kitabım Burada</title>
+  <style>
+    body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0f1117;
+  color: #e3e3e3;
+  margin: 0;
+  padding: 0;
+}
+
+   header {
+  background: #1c1f26;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+}
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    nav a {
+  margin-right: 10px;
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 6px 12px;
+  background-color: #2a2d34;
+  border-radius: 20px;
+  transition: background-color 0.3s;
+}
+
+   nav a:hover {
+  background-color: #3a3d44;
+}
+
+    .profile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    .container {
+  display: flex;
+  gap: 30px;
+  padding: 30px 40px;
+}
+
+.sidebar {
+  width: 260px;
+  background: #1a1c23;
+  padding: 25px;
+  border-radius: 10px;
+}
+
+.main {
+  flex: 1;
+  background: #1a1c23;
+  padding: 20px;
+  border-radius: 17px;
+}
+
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input[type="text"], select {
+      padding: 10px;
+      flex: 1;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 99px;
+      cursor: pointer;
+    }
+    .kategori-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .kategori-grid div {
+  background: #2a2d34;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  color: #e3e3e3;
+  font-weight: bold;
+}
+
+    .kitap {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    .kitap img {
+      width: 100px;
+      border-radius: 8px;
+    }
+    .kitap .info {
+      flex: 1;
+    }
+    .mevcut {
+      background: green;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      position: absolute;
+      margin-top: 4px;
+    }
+    .stars {
+      color: orange;
+    }
+    .onerilen-container {
+  background: #12141a;
+  padding: 30px 60px;
+}
+
+    .onerilen-baslik {
+      font-size: 20px;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    .onerilen-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 35px;
+    }
+    .onerilen-kart {
+  background: #1d1f27;
+  border-radius: 10px;
+  padding: 10px;
+  color: #f1f1f1;
+      position: relative;
+      transition: transform 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .onerilen-kart:hover {
+      transform: scale(1.03);
+    }
+    .onerilen-kart img {
+      width: 100%;
+      border-radius: 6px;
+      object-fit: cover;
+      height: 220px;
+    }
+    .onerilen-kart h4 {
+      font-size: 14px;
+      margin: 8px 0 4px;
+      text-align: center;
+    }
+    .onerilen-kart p {
+      font-size: 13px;
+      margin: 0;
+      text-align: center;
+      color: #555;
+    }
+    .baslik-kutu {
+      position: relative;
+      display: inline-block;
+      padding: 7px 19px;
+      margin: 0px;
+      background: linear-gradient(135deg, #678fc7, #0c539f);
+      clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    /* Kitap detay başlangıçta gizli */
+    .kitap-detay {
+      display: none;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    .kitap-detay img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      display: block;
+    }
+    .kitap-detay h2 {
+      margin: 0 0 10px 0;
+    }
+    .kitap-detay p {
+      margin: 6px 0;
+      color: #333;
+    }
+    .geri-btn {
+      margin-top: 15px;
+      background-color: #0056d2;
+      border: none;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+.yeni-header {
+  background-color: #1c1f26;
+  padding: 16px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+
+.logo-alani {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-yazi {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.arama-kapsayici {
+  display: flex;
+  flex: 1;
+  max-width: 500px;
+  margin: 0 20px;
+  gap: 10px;
+}
+
+.arama-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background-color: #2c2f36;
+  color: white;
+}
+
+.sube-select {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #2c2f36;
+  color: white;
+}
+
+.menu-alani {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.menu-alani a {
+  background-color: #2c2f36;
+  color: white;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 16px;
+  font-weight: bold;
+}
+
+.profile-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+select {
+  background-color: #1e1e1e;
+  color: white;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+select:hover {
+  background-color: #2c2c2c;
+}
+
+
+.kategori-grid button {
+  background: linear-gradient(to right, #007bff, #00c6ff);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 16px;
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.2s, background-color 0.3s;
+  cursor: pointer;
+}
+
+.kategori-grid button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to right, #0056b3, #0099cc);
+}
+
+
+  </style>
+</head>
+<body>
+ <header class="yeni-header">
+  <div class="logo-alani">
+    <img src="https://cdn-icons-png.flaticon.com/512/29/29302.png" alt="Logo" class="logo">
+    <span class="logo-yazi">Kitabım Burada</span>
+  </div>
+  <div class="arama-kapsayici">
+    <input type="text" id="aramaInput" placeholder="Kitaplarda ara..." class="arama-input" />
+    <select class="sube-select">
+      <option>Şube Seç...</option>
+    </select>
+    <button id="aramaBtn">Ara</button>
+
+  </div>
+  <div class="menu-alani">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="kitaplarim.html">Kitaplarım</a>
+
+    <a href="giris.html"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" class="profile-icon" /></a>
+  </div>
+</header>
+
+<div class="container">
+  <div class="sidebar">
+    <h3>Kategoriler</h3>
+   <div class="kategori-grid">
+  <button onclick="kategoriyeGit('roman')"><span>📖</span> Roman</button>
+  <button onclick="kategoriyeGit('oyku')"><span>💬</span> Öykü</button>
+  <button onclick="kategoriyeGit('gerilim')"><span>⚠️</span> Gerilim</button>
+  <button onclick="kategoriyeGit('biyografi')"><span>👤</span> Biyografi</button>
+  <button onclick="kategoriyeGit('tarih')"><span>📅</span> Tarih</button>
+  <button onclick="kategoriyeGit('bilim')"><span>🔬</span> Bilim</button>
+  <button onclick="kategoriyeGit('teknoloji')"><span>🧠</span> Teknoloji</button>
+  <button onclick="kategoriyeGit('ekonomi')"><span>📈</span> Ekonomi</button>
+</div>
+
+  </div>
+
+    <div class="main">
+  <h3>Popüler Kitaplar</h3>
+  <div class="kitap" id="populer-kitap">
+    <div style="position: relative;">
+      <span class="mevcut" id="populer-durum">Mevcut</span>
+      <img src="/static/images/placeholder.png" alt="Popüler Kitap" id="populer-img" />
+    </div>
+    <div class="info">
+      <h4 id="populer-baslik">Kitap Başlığı</h4>
+      <p id="populer-yazar">Yazar Adı</p>
+      <div class="stars">★★★★☆</div>
+      <p id="populer-aciklama">Kitap açıklaması buraya gelecek.</p>
+      <button class="kirala-btn">Kirala</button>
+    </div>
+  </div>
+</div>
+  </div>
+
+  <div class="onerilen-container">
+    <div class="onerilen-baslik">Öne Çıkan / Önerilen Kitaplar</div>
+    <div class="onerilen-grid" id="kitap-listesi">
+      <!-- Kitaplar buraya JS ile gelecek -->
+    </div>
+  </div>
+
+  <div class="kitap-detay" id="kitap-detay">
+    <!-- Kitap detay buraya JS ile gelecek -->
+  </div>
+
+  <script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  fetch("/api/kitaplar")
+    .then((response) => response.json())
+    .then((kitaplar) => {
+      const listeDiv = document.getElementById("kitap-listesi");
+      const detayDiv = document.getElementById("kitap-detay");
+      const populerKitap = kitaplar[Math.floor(Math.random() * kitaplar.length)];
+      const populerDiv = document.getElementById("populer-kitap");
+
+      if (populerKitap && populerDiv) {
+        populerDiv.setAttribute("onclick", `window.location.href='kitap.html?id=${populerKitap.kitap_id}'`);
+
+        const populerImg = document.getElementById("populer-img");
+        const gorselSrc = populerKitap.gorsel_url || "/static/images/placeholder.png";
+        populerImg.src = gorselSrc;
+        populerImg.alt = populerKitap.isim;
+
+        document.querySelector("#populer-kitap .mevcut").textContent =
+          populerKitap.durum === "mevcut" ? "Mevcut" : "Mevcut Değil";
+
+        document.getElementById("populer-baslik").textContent = populerKitap.isim;
+        document.getElementById("populer-yazar").textContent = populerKitap.yazar || "Bilinmiyor";
+        document.getElementById("populer-aciklama").textContent = populerKitap.aciklama || "Açıklama bulunamadı.";
+      }
+
+      if (id) {
+        const kitap = kitaplar.find((k) => k.kitap_id == id);
+        if (kitap) {
+          const gorselSrc = kitap.gorsel_url || "/static/images/placeholder.png";
+          detayDiv.innerHTML = `
+            <img src="${gorselSrc}" alt="${kitap.isim}" />
+            <h2>${kitap.isim}</h2>
+            <p><strong>Yazar:</strong> ${kitap.yazar || "Bilinmiyor"}</p>
+            <p><strong>Şube:</strong> ${kitap.sube || "Bilinmiyor"}</p>
+            <p><strong>Durum:</strong> ${kitap.durum || "Bilinmiyor"}</p>
+            <p>${kitap.aciklama || "Açıklama bulunamadı."}</p>
+            <button class="geri-btn" id="geriBtn">Geri</button>
+          `;
+          detayDiv.style.display = "block";
+          listeDiv.style.display = "none";
+
+          document.getElementById("geriBtn").onclick = () => {
+            window.history.pushState({}, "", window.location.pathname);
+            detayDiv.style.display = "none";
+            listeDiv.style.display = "grid";
+          };
+        } else {
+          detayDiv.innerHTML = "<p>Kitap bulunamadı.</p>";
+          detayDiv.style.display = "block";
+          listeDiv.style.display = "none";
+        }
+      } else {
+        detayDiv.style.display = "none";
+        listeDiv.style.display = "grid";
+        listeDiv.innerHTML = "";
+
+        kitaplar.forEach((kitap) => {
+          const gorselSrc = kitap.gorsel_url || "/static/images/placeholder.png";
+          const kitapDiv = document.createElement("div");
+          kitapDiv.className = "onerilen-kart";
+          kitapDiv.innerHTML = `
+            <div style="position: relative; width: 100%; height: 220px; overflow: hidden;">
+              <span class="mevcut" style="position: absolute; top: 8px; left: 8px;">${
+                kitap.durum === "mevcut" ? "Mevcut" : "Mevcut Değil"
+              }</span>
+              <img src="${gorselSrc}" alt="${kitap.isim}" />
+            </div>
+            <h4>${kitap.isim}</h4>
+            <p>${kitap.yazar || "Bilinmeyen yazar"}</p>
+          `;
+          kitapDiv.onclick = () => {
+            window.location.href = `kitap.html?id=${kitap.kitap_id}`;
+          };
+          listeDiv.appendChild(kitapDiv);
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Kitap verisi alınırken hata:", error);
+    });
+
+  // 🔍 Arama işlemi
+  document.getElementById("aramaBtn").addEventListener("click", () => {
+    const query = document.getElementById("aramaInput").value.trim();
+    if (!query) return;
+
+    fetch(`/api/kitap-ara?q=${encodeURIComponent(query)}`)
+      .then((res) => res.json())
+      .then((kitaplar) => {
+        const listeDiv = document.getElementById("kitap-listesi");
+        listeDiv.innerHTML = "";
+
+        if (!kitaplar.length) {
+          listeDiv.innerHTML = "<p>Sonuç bulunamadı.</p>";
+          return;
+        }
+
+        kitaplar.forEach((kitap) => {
+          const gorselSrc = kitap.gorsel_url || "/static/images/placeholder.png";
+          const div = document.createElement("div");
+          div.className = "onerilen-kart";
+          div.style.cursor = "pointer";
+          div.innerHTML = `
+            <div style="position: relative; width: 100%; height: 220px; overflow: hidden;">
+              <span class="mevcut" style="position: absolute; top: 8px; left: 8px;">${
+                kitap.durum === "mevcut" ? "Mevcut" : "Mevcut Değil"
+              }</span>
+              <img src="${gorselSrc}" alt="${kitap.isim}" />
+            </div>
+            <h4>${kitap.isim}</h4>
+            <p>${kitap.yazar || "Bilinmeyen yazar"}</p>
+          `;
+          div.onclick = () => {
+            window.location.href = `kitap.html?id=${kitap.kitap_id}`;
+          };
+          listeDiv.appendChild(div);
+        });
+      })
+      .catch((err) => {
+        console.error("Arama hatası:", err);
+      });
+  });
+
+function kategoriyeGit(kategori) {
+  fetch(`/api/kategori-kitaplar?kategori=${encodeURIComponent(kategori)}`)
+    .then(res => res.json())
+    .then(kitaplar => {
+      const listeDiv = document.getElementById("kitap-listesi");
+      const detayDiv = document.getElementById("kitap-detay");
+
+      detayDiv.style.display = "none";
+      listeDiv.style.display = "grid";
+      listeDiv.innerHTML = "";
+
+      if (!kitaplar.length) {
+        listeDiv.innerHTML = "<p>Bu kategoride kitap bulunamadı.</p>";
+        return;
+      }
+
+      kitaplar.forEach((kitap) => {
+        const gorsel = kitap.gorsel_url || "/static/images/placeholder.png";
+        const kitapDiv = document.createElement("div");
+        kitapDiv.className = "onerilen-kart";
+        kitapDiv.innerHTML = `
+          <div style="position: relative; width: 100%; height: 220px;">
+            <span class="mevcut" style="position: absolute; top: 8px; left: 8px;">${
+              kitap.durum === "mevcut" ? "Mevcut" : "Mevcut Değil"
+            }</span>
+            <img src="${gorsel}" alt="${kitap.isim}" />
+          </div>
+          <h4>${kitap.isim}</h4>
+          <p>${kitap.yazar || "Bilinmeyen yazar"}</p>
+        `;
+        kitapDiv.onclick = () => {
+          window.location.href = `kitap.html?id=${kitap.kitap_id}`;
+        };
+        listeDiv.appendChild(kitapDiv);
+      });
+    })
+    .catch(err => {
+      console.error("Kategori verisi alınamadı:", err);
+    });
+}
+
+function kategoriyeGit(kategori) {
+    const url = `kategori.html?kategori=${encodeURIComponent(kategori)}`;
+    window.location.href = url;
+  }
+
+
+</script>
+
+</body>
+</html>
