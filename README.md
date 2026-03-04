@@ -42,4 +42,5 @@ AWS_DEFAULT_REGION=eu-north-1
 python main.py
 
 🎓 Akademik Not
+
 Bu çalışma, Ankara Üniversitesi bünyesindeki yazılım geliştirme projelerim kapsamında, bulut bilişim ve NoSQL veritabanı mimarilerini deneyimlemek amacıyla geliştirilmiştir.
