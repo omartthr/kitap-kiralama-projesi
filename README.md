@@ -44,9 +44,11 @@ Bulut Tabanlı Yapı: Verilerin yerel yerine AWS üzerinde güvenli bir şekilde
 1- Gerekli kütüphaneleri yükleyin:
 
 pip install flask boto3 python-dotenv requests
+
 2- AWS Anahtarlarınızı Tanımlayın:
 
 key.env dosyası oluşturun ve şu formatta doldurun:
+
 AWS_ACCESS_KEY_ID=YOUR_KEY
 
 AWS_SECRET_ACCESS_KEY=YOUR_SECRET
